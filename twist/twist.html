@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<!--Program 1 HTML file
+    John Martinez
+    7/18/2015
+-->
+<html>
+<head>
+<title>Twisting Tessellated Triangle</title>
+<script id='vertex-shader' type='x-shader/x-vertex'>
+attribute vec3 vPosition;
+attribute vec3 vColor;//color of each triangle
+uniform float theta;
+varying vec3 fColor;
+
+void main()
+{
+    float d = sqrt(vPosition.x*vPosition.x + vPosition.y*vPosition.y);
+    float t = d * theta;
+    float s = sin(t);
+    float c = cos(t);
+    gl_Position.x = -s * vPosition.y + c * vPosition.x;
+    gl_Position.y = s * vPosition.x + c * vPosition.y;
+    gl_Position.z = 0.0;
+    gl_Position.w = 1.0;
+    fColor = vColor;//just pass on to frag shader
+}
+</script>
+<script id='fragment-shader' type='x-shader/x-fragment'>
+precision mediump float;
+varying vec3 fColor;
+void main()
+{
+    gl_FragColor = vec4(fColor, 1.0);
+}
+</script>
+<script src='../Common/webgl-utils.js'></script>
+<script src='../Common/initShaders.js'></script>
+<script src='../Common/MV.js'></script>
+<script src='twist.js'></script>
+</head>
+<body>
+<canvas id='gl-canvas' width='512' height='512'>
+	Oops... your browswer doesn't support the HTML5 canvas element
+</canvas>
+<br>
+Number of subdivisions: 0<input type='range' id='divslider' onchange='changeVals()' min='0' max='6' step='1' value='1'>6
+<br>
+Theta (in degrees):<input type='text' id='thetabox' size='12' value='0'>
+<input type='button' value='Change' onclick='changeVals()'>
+</body>
+</html>
